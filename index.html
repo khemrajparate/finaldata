@@ -8,6 +8,13 @@
     <meta name="Description" content="Enter your description here" />
     <link rel="stylesheet" href="index.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.7.0/css/font-awesome.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.4.0/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap" rel="stylesheet">
+
+    
    
     <style>
         /* General body styling */
@@ -25,13 +32,18 @@
             justify-content: space-between;
             align-items: center;
             padding: 1rem 2rem;
-           
+            font-size: 16PX;
+            font-weight: 600PX;
             position: relative;
+            color: #04374e;
+            
         }
 
         .logo img {
             height: 50px;
             width: 150px;
+            Size: 310px
+
         }
 
         .menu {
@@ -41,29 +53,30 @@
 
         .menu a {
             text-decoration: none;
-            color: #333;
+            color:  #023A51            ;
             font-size: 1.2rem;
             padding: 0.5rem 1rem;
         }
 
         .menu a:hover,
         .menu a.active {
-            color: #007BFF;
-            border-bottom: 2px solid #007BFF;
+            color: #FF5757;
+            border-bottom: 2px solid #FF5757;
         }
 
         button {
             padding: 0.75rem 1.5rem;
-            background-color: #38B2AC;
-            color: white;
+            background-color:  #4EE2EC;
+            color:  #FFFFFF;
             border: none;
-            border-radius: 5px;
+            border-radius: 12 px ;           ;
             cursor: pointer;
             font-size: 1rem;
         }
 
         button:hover {
-            background-color: #319795;
+            background-color:  #B3FAFF;
+            color:  #FF5757;            ;
         }
 
         /* Mobile Styles */
@@ -209,7 +222,7 @@
 
         .data {
             background: rgb(0,131,129);
-            background: linear-gradient(90deg, rgba(0,131,129,1) 12%, rgb(0, 21, 53) 12%);
+            background: linear-gradient(90deg,  #4EE2EC            12%,#023A51            12%);
             color: white;
             padding: 12px;
             border-radius: 12px;
@@ -240,12 +253,16 @@
         .btn1 {
             color: rgb(0, 89, 85);
             border: #eaf2f8;
-            font-size: 16px;
+            font-size: 18px;
             margin-left: 40px;
-            font-weight: 600;
+            font-weight: 500;
             margin-top: -55px;
             padding-bottom: 25px;
             margin-top: -25px;
+           
+            font-family: "Poppins", sans-serif;
+           
+
            
         }
 
@@ -334,6 +351,8 @@ th select option {
         width: 80%;
         padding: 5px;
     }
+
+    
     
 </style>
 
@@ -343,7 +362,7 @@ th select option {
         <div class="logo">
             <img src="https://herculesadvisors.in/wp-content/uploads/2024/11/Untitled-design-2-e1731668329705.png" alt="Hercules Insurance Logo">
         </div>
-        <div class="hamburger" onclick="toggleMenu()">☰</div>
+        <div class="hamburger" onclick="toggleMenu()"></div>
         <div class="menu">
             <a href="#" class="active">Home</a>
             <a href="#">Insurance</a>
@@ -351,15 +370,22 @@ th select option {
             <a href="#">About Us</a>
             <a href="#">Contact Us</a>
         </div>
-        <button>Claim</button>
+        <div class="button-container">
+            <button class="claim-button">
+                Claim Here<span class="glowing-dot"></span>
+            </button>
+        </div>
     </nav>
-    <button class="data" style="margin-top: 35px;">COMPARE & CHOOSE</button>
-
-    <h1 style="margin-top: 65px; color: #04374e;">SBI Arogya Supreme Pro vs Royal Sundaram Next Gen vs NIA -<br>
-        Yuva Bharat Health - Base Plan</h1>
-
-        <div class="container">
+   
+        
+            <img src="https://via.placeholder.com/150" id="watermark" style="position:absolute; opacity:0.1; width:150px; right:10px; top:10px;">
        
+            <div class="container" id="table-container">
+
+                <button class="data" style="margin-top: 35px;">COMPARE & CHOOSE</button>
+
+    <h1 style="margin-top: 65px; color: #04374e;">Smart Insurance Comparison<br>
+         Discover the Perfect Coverage for You</h1>
 
             <table>
                     <tr>
@@ -514,19 +540,18 @@ th select option {
                 
             </table><br>
             
-            <button onclick="window.print()"><i class="fa fa-download"></i> Download</button>
-        </div>
            
-            
-        
-       
+        </div>
+        <div class="watermark">
+            herculesadvisors
+        </div>
 
-
-
-       
-
+        <!-- Print / Download Button -->
+        <button onclick="window.print()"><i class="fa fa-download"></i> Download</button>
     
-    
+
+           
+                
   
     <div id="serviceInfo" class="service-info">
         <h2 id="serviceTitle"></h2>
@@ -547,20 +572,10 @@ th select option {
 
    
          <script>
-
-            function downloadPageAsPDF() {
-            const { jsPDF } = window.jspdf;
-            let doc = new jsPDF();
-
-            html2canvas(document.getElementById("content")).then(canvas => {
-                let imgData = canvas.toDataURL("image/png");
-                let imgWidth = 190;  // A4 width in mm (210mm minus margins)
-                let imgHeight = (canvas.height * imgWidth) / canvas.width;
-
-                doc.addImage(imgData, "PNG", 10, 10, imgWidth, imgHeight);
-                doc.save("webpage.pdf");
-            });
-        }
+            
+         
+   
+           
             // Simulated database
             const insuranceData = {
                 "State Bank of india": 
@@ -599,12 +614,12 @@ th select option {
 
                 },
 
-                "New India": {
-                    "Super health platinum infinite ": { roomRent:"Upto to 1% of Sum Insured per day", copay:"Optional 20% Copay",  prePost:"30 and 60 days", Consumables:"Optional cover", power:"25% SI for claim free year with Max 50% of SI.", restoration:"One time after exhauastion of SI for unrelated Illness ", Day:"226 Day care covered", Sublimits:"Cataract, up to 20% of Sum Insured or INR 50,000, whichever is less, for each eye.", Life:"Yes", Hospital:"", Extra:"Nothing special", diseases:"36 months", Deductible:"NA", Maternity:"After 3 years, Maternity shall not exceed 10% of the average Sum Insured ", Road:"1% of SI", OPD:"NA", wait:"30 days", Preventive:"every 3 claim free years"},
-                    "aaroyga Supreme plus": { roomRent:"Upto to 1% of Sum Insured per day", copay:"Optional 20% Copay",  prePost:"30 and 60 days ", Consumables:"Optional cover", power:"25% SI for claim free year with Max 50% of SI.", restoration:"One time after exhauastion of SI for unrelated Illness ", Day:"226 Day care covered", Sublimits:"Cataract, up to 20% of Sum Insured or INR 50,000, whichever is less, for each eye.", Life:"Yes", Hospital:"2055", Extra:"Nothing special", diseases:"36 months", Deductible:"NA", Maternity:"After 3 years, Maternity shall not exceed 10% of the average Sum Insured ", Road:"1% of the Sum Insured.", OPD:"NA", wait:"30 days", Preventive:"NA"},
-                    "Aaroyga supreme Premium": { roomRent:"5 - 15 lacs Single Pvt A/C Room,25 lacs - 50 lacs- Dexule A/C room Rider is available for upgradation from 5lacs to 20lacs", copay:"No co-pay for Zone 1, if Zone 2 client take treatment from Zone 1 then 10% will apply",  prePost:"60 days - 90 days ", Consumables:"Once in a year for unrelated illness", power:"10% every year, Max 30% ", restoration:"No co-pay for Zone 1, if Zone 2 client take treatment from Zone 1 then 10% will apply", Day:"NO", Sublimits:"Table as per mentioned in the Policy wording ", Life:"Yes", Hospital:"2055", Extra:"", diseases:"2 years", Deductible:"NA", Maternity:"NA", Road:"5 to 15 lacs - 5000, 25 lacs - 7500, 50 lacs - 10000", OPD:"", wait:"", Preventive:"Yes after 2 claim free year"},
-                    "Aaroyga Plus": { roomRent:"Single Pvt A/C Room, Rider is available for upgradation from 5lacs to 20lacs", copay:"No co-pay for Zone 1, if Zone 2 client take treatment from Zone 1 then 10% will apply",  prePost:"60 days - 90 days ", Consumables:"Once in a year for unrelated illness", power:"10% every year, Max 30% ", restoration:"NO", Day:"NO", Sublimits:"Table as per mentioned in the Policy wording ", Life:"Yes", Hospital:"2055", Extra:"", diseases:"2 years", Deductible:"NA", Maternity:"NA", Road:"5 to 15 lacs - 5000, 25 lacs - 7500, 50 lacs - 10000", OPD:"NO", wait:"", Preventive:"Yes after 2 claim free year"},
-                    "Super Health Elite": { roomRent:"Single Pvt A/C Room, Rider is available for upgradation from 5lacs to 20lacs", copay:"No co-pay for Zone 1, if Zone 2 client take treatment from Zone 1 then 10% will apply",  prePost:"60 days - 90 days ", Consumables:"Once in a year for unrelated illness", power:"10% every year, Max 30% ", restoration:"NO", Day:"NO", Sublimits:"Table as per mentioned in the Policy wording ", Life:"Yes", Hospital:"2055", Extra:"", diseases:"2 years", Deductible:"NA", Maternity:"24 months waiting, 25k for Single and 37500 for Twin, however additional cover can avail for more coverage", Road:"5 to 15 lacs - 5000, 25 lacs - 7500, 50 lacs - 10000", OPD:"NO", wait:"", Preventive:"Yes after 2 claim free year"},
+                "New India Assurance": {
+                    "New India Mediclaim Policy ": { roomRent:"Upto to 1% of Sum Insured per day", copay:"Optional 20% Copay",  prePost:"30 and 60 days", Consumables:"Optional cover", power:"25% SI for claim free year with Max 50% of SI.", restoration:"One time after exhauastion of SI for unrelated Illness ", Day:"226 Day care covered", Sublimits:"Cataract, up to 20% of Sum Insured or INR 50,000, whichever is less, for each eye.", Life:"Yes", Hospital:"", Extra:"Nothing special", diseases:"36 months", Deductible:"NA", Maternity:"After 3 years, Maternity shall not exceed 10% of the average Sum Insured ", Road:"1% of SI", OPD:"NA", wait:"30 days", Preventive:"every 3 claim free years"},
+                    "New India Flloater Mediclaim": { roomRent:"Upto to 1% of Sum Insured per day", copay:"Optional 20% Copay",  prePost:"30 and 60 days ", Consumables:"Optional cover", power:"25% SI for claim free year with Max 50% of SI.", restoration:"One time after exhauastion of SI for unrelated Illness ", Day:"226 Day care covered", Sublimits:"Cataract, up to 20% of Sum Insured or INR 50,000, whichever is less, for each eye.", Life:"Yes", Hospital:"2055", Extra:"Nothing special", diseases:"36 months", Deductible:"NA", Maternity:"After 3 years, Maternity shall not exceed 10% of the average Sum Insured ", Road:"1% of the Sum Insured.", OPD:"NA", wait:"30 days", Preventive:"NA"},
+                    "Yuva Bharat Health plan - Base": { roomRent:"5 - 15 lacs Single Pvt A/C Room,25 lacs - 50 lacs- Dexule A/C room Rider is available for upgradation from 5lacs to 20lacs", copay:"No co-pay for Zone 1, if Zone 2 client take treatment from Zone 1 then 10% will apply",  prePost:"60 days - 90 days ", Consumables:"Once in a year for unrelated illness", power:"10% every year, Max 30% ", restoration:"No co-pay for Zone 1, if Zone 2 client take treatment from Zone 1 then 10% will apply", Day:"NO", Sublimits:"Table as per mentioned in the Policy wording ", Life:"Yes", Hospital:"2055", Extra:"", diseases:"2 years", Deductible:"NA", Maternity:"NA", Road:"5 to 15 lacs - 5000, 25 lacs - 7500, 50 lacs - 10000", OPD:"", wait:"", Preventive:"Yes after 2 claim free year"},
+                    "Yuva Bharat Health - Gold Plan": { roomRent:"Single Pvt A/C Room, Rider is available for upgradation from 5lacs to 20lacs", copay:"No co-pay for Zone 1, if Zone 2 client take treatment from Zone 1 then 10% will apply",  prePost:"60 days - 90 days ", Consumables:"Once in a year for unrelated illness", power:"10% every year, Max 30% ", restoration:"NO", Day:"NO", Sublimits:"Table as per mentioned in the Policy wording ", Life:"Yes", Hospital:"2055", Extra:"", diseases:"2 years", Deductible:"NA", Maternity:"NA", Road:"5 to 15 lacs - 5000, 25 lacs - 7500, 50 lacs - 10000", OPD:"NO", wait:"", Preventive:"Yes after 2 claim free year"},
+                    "Yuva Bharat Health - Platinum Plan": { roomRent:"Single Pvt A/C Room, Rider is available for upgradation from 5lacs to 20lacs", copay:"No co-pay for Zone 1, if Zone 2 client take treatment from Zone 1 then 10% will apply",  prePost:"60 days - 90 days ", Consumables:"Once in a year for unrelated illness", power:"10% every year, Max 30% ", restoration:"NO", Day:"NO", Sublimits:"Table as per mentioned in the Policy wording ", Life:"Yes", Hospital:"2055", Extra:"", diseases:"2 years", Deductible:"NA", Maternity:"24 months waiting, 25k for Single and 37500 for Twin, however additional cover can avail for more coverage", Road:"5 to 15 lacs - 5000, 25 lacs - 7500, 50 lacs - 10000", OPD:"NO", wait:"", Preventive:"Yes after 2 claim free year"},
                     
                 }
 
